@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.edu.pwsztar.domain.entity.Movie;
 
+import java.util.List;
+
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long>, CrudRepository<Movie, Long> {
 
@@ -15,5 +17,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long>, CrudReposit
     @Query("DELETE FROM Movie m WHERE m.movieId = :movieId")
     void deleteById(@Param("movieId") Long movieId);
 
+    @Modifying
+    @Query("SELECT m FROM Movie m ORDER BY m.year desc" )
+    List<Movie> findAll();
     Movie findOneByMovieId(Long movieId);
 }

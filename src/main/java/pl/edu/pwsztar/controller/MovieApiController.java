@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pwsztar.domain.dto.CreateMovieDto;
 import pl.edu.pwsztar.domain.dto.MovieDto;
+import pl.edu.pwsztar.domain.dto.TrailerDto;
 import pl.edu.pwsztar.service.MovieService;
 
 import java.util.List;
@@ -53,5 +54,12 @@ public class MovieApiController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @CrossOrigin
+    @GetMapping(value = "/movies/{movieId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<TrailerDto> getTrailerForMovie(@PathVariable Long movieId) {
+        LOGGER.info("delete movie: {}", movieId);
+        TrailerDto trailerDto=movieService.getTrailer(movieId);
 
+        return new ResponseEntity<>(trailerDto,HttpStatus.OK);
+    }
 }
