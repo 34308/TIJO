@@ -1,5 +1,6 @@
 package pl.edu.pwsztar.controller;
 
+import org.hibernate.sql.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +9,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import pl.edu.pwsztar.domain.dto.CreateMovieDto;
-import pl.edu.pwsztar.domain.dto.DetailsMovieDto;
-import pl.edu.pwsztar.domain.dto.MovieDto;
+import pl.edu.pwsztar.domain.dto.*;
 import pl.edu.pwsztar.service.MovieService;
 
+import javax.persistence.TransactionRequiredException;
 import java.util.List;
 
 @Controller
@@ -63,5 +63,19 @@ public class MovieApiController {
 
         return new ResponseEntity<>(detailsMovieDto, HttpStatus.OK);
     }
+    @CrossOrigin
+    @GetMapping(value = "/movies/counter", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<NumberOfMoviesDto> getNumberOfMovies() {
 
+        NumberOfMoviesDto numberOfMoviesDto=new NumberOfMoviesDto();
+        numberOfMoviesDto.setCounter(movieService.getNumberOfMovie());
+    return new ResponseEntity<NumberOfMoviesDto>(numberOfMoviesDto, HttpStatus.OK);
+    }
+    @CrossOrigin
+    @PutMapping(value = "/movies/{movieId}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UpdateMovieDto> editMovie(@PathVariable Long movieId, @RequestBody UpdateMovieDto body)throws TransactionRequiredException {
+        LOGGER.info("details : {}", movieId);
+        movieService.UpdateMovie(movieId,body);
+        return new ResponseEntity<>(body, HttpStatus.OK);
+    }
 }

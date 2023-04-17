@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.edu.pwsztar.domain.dto.CreateMovieDto;
 import pl.edu.pwsztar.domain.dto.DetailsMovieDto;
 import pl.edu.pwsztar.domain.dto.MovieDto;
+import pl.edu.pwsztar.domain.dto.UpdateMovieDto;
 import pl.edu.pwsztar.domain.entity.Movie;
 import pl.edu.pwsztar.domain.mapper.MovieDetailsMapper;
 import pl.edu.pwsztar.domain.mapper.MovieListMapper;
@@ -14,6 +15,7 @@ import pl.edu.pwsztar.domain.mapper.MovieMapper;
 import pl.edu.pwsztar.domain.repository.MovieRepository;
 import pl.edu.pwsztar.service.MovieService;
 
+import javax.persistence.TransactionRequiredException;
 import java.util.List;
 
 @Service
@@ -64,6 +66,16 @@ public class MovieServiceImpl implements MovieService {
         }
 
         return movieDetailsMapper.mapToDto(movie);
+    }
+
+    @Override
+    public Integer getNumberOfMovie() {
+        return Math.toIntExact(movieRepository.count());
+    }
+
+    @Override
+    public void UpdateMovie(Long id, UpdateMovieDto updateMovieDto) throws TransactionRequiredException {
+        movieRepository.updateMovieInfoById(updateMovieDto.getTitle(),updateMovieDto.getImage(), updateMovieDto.getYear() ,updateMovieDto.getVideoId(),id);
     }
 
 }
